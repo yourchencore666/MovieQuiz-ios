@@ -10,7 +10,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     @IBOutlet private var noButton: UIButton!
     
     private var currentQuestionIndex = 0
-    private var corrrectAnswers = 0
+    private var correctAnswers = 0
     
     private let questionsAmount = 10
     private var questionFactory: QuestionFactoryProtocol?
@@ -31,7 +31,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     }
     // MARK: - QuestionFactoryDelegate
     
-    func didRecieveNextQuestion(question: QuizQuestion?) {
+    func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question = question else {
             return
         }
@@ -83,7 +83,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
                                message: result.text,
                                alertButtonText: result.buttonText) {
             self.currentQuestionIndex = 0
-            self.corrrectAnswers = 0
+            self.correctAnswers = 0
             self.questionFactory?.requestNextQuestion()
         }
         alertPresenter?.showAlert(model: model)
@@ -100,7 +100,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     
     private func showAnswerResult(isCorrect: Bool) {
         if isCorrect {
-            corrrectAnswers += 1
+            correctAnswers += 1
         }
         
         imageView.layer.masksToBounds = true
@@ -117,14 +117,14 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             self.yesButton.isEnabled = true
             self.noButton.isEnabled = true
             self.imageView.layer.borderWidth = 0
-            self.showNextQestionOrResults()
+            self.showNextQuestionOrResults()
             
             
         }
         
     }
     
-    private func showNextQestionOrResults() {
+    private func showNextQuestionOrResults() {
         
         if currentQuestionIndex == questionsAmount - 1 {
             
@@ -132,9 +132,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
                 statisticService.gamesCount += 1
             }
             
-            let record = GameRecord(correct: corrrectAnswers, total: questionsAmount, date: Date().dateTimeString)
+            let record = GameRecord(correct: correctAnswers, total: questionsAmount, date: Date().dateTimeString)
             
-            statisticService.store(correct: corrrectAnswers, total: questionsAmount)
+            statisticService.store(correct: correctAnswers, total: questionsAmount)
             
             let bestRecord = GameRecord.returnBestRecords(current: record, previous: statisticService.bestGame)
             
@@ -143,7 +143,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             }
             //            statisticService.bestGame = record.compareRecord(current: record, previous: statisticService.bestGame)
             
-            let text = "Ваш результат: \(corrrectAnswers) из \(questionsAmount)\nКоличество сыграных квизов: \(statisticService.gamesCount)\nРекорд:  \(statisticService.bestGame.correct)/\(questionsAmount) \(statisticService.bestGame.date)\nСредняя точность: \(String(format: "%.2f", statisticService.totalAccuracy as CVarArg))%"
+            let text = "Ваш результат: \(correctAnswers) из \(questionsAmount)\nКоличество сыграных квизов: \(statisticService.gamesCount)\nРекорд:  \(statisticService.bestGame.correct)/\(questionsAmount) \(statisticService.bestGame.date)\nСредняя точность: \(String(format: "%.2f", statisticService.totalAccuracy as CVarArg))%"
             let viewModel = QuizResultsViewModel(title: "Этот раунд окончен!", text: text, buttonText: "Сыграть еще раз")
             show(quiz: viewModel) // show result
         } else {

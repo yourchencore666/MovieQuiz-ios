@@ -1,5 +1,5 @@
 //
-//  StaticSetvice.swift
+//  StaticService.swift
 //  MovieQuiz
 //
 //  Created by Юрченко Артем on 11.10.2022.
