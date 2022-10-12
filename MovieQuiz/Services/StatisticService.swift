@@ -9,8 +9,8 @@ import Foundation
 
 protocol StatisticService {
     var totalAccuracy: Double {get}
-    var gamesCount: Int {get}
-    var bestGame: GameRecord {get}
+    var gamesCount: Int {get set}
+    var bestGame: GameRecord {get set}
     func store(correct count: Int, total amount: Int)
 }
 
@@ -19,7 +19,7 @@ struct GameRecord: Codable {
     let total: Int
     let date: String
     
-    func compareRecord(current: GameRecord, previous: GameRecord) -> GameRecord {
+  public func compareRecord(current: GameRecord, previous: GameRecord) -> GameRecord {
         let currentRecord = GameRecord(correct: current.correct, total: current.total, date: current.date)
         let previousRecord = GameRecord(correct: previous.correct, total: previous.total, date: previous.date)
         if currentRecord.correct > previousRecord.correct {
@@ -48,7 +48,6 @@ final class StatisticServiceImplementation: StatisticService {
         get {
            return userDefaults.integer(forKey: Keys.gamesCount.rawValue)
         }
-        
         set {
             userDefaults.set(newValue, forKey: Keys.gamesCount.rawValue)
         }
@@ -78,8 +77,9 @@ final class StatisticServiceImplementation: StatisticService {
         if bestGame.correct >= gameRecord.correct {
             userDefaults.set(bestGame.correct, forKey: Keys.bestGame.rawValue)
             userDefaults.set(bestGame.total, forKey: Keys.bestGame.rawValue)
+            userDefaults.set(bestGame.date, forKey: bestGame.date)
         } else  {
-            
+            print("Невозможно сохранить результат")
         }
     }
     

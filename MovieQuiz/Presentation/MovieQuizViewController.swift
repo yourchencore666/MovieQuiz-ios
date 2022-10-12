@@ -78,19 +78,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     }
     
     private func show(quiz result: QuizResultsViewModel) {
-//        let alert = UIAlertController(title: result.title, message: result.text, preferredStyle: .alert)
-//        let action = UIAlertAction(title: result.buttonText, style: .default, handler: { [weak self] _ in
-//            guard let self = self else {return}
-//
-//            self.currentQuestionIndex = 0
-//            self.corrrectAnswers = 0
-//            self.questionFactory?.requestNextQuestion()
-//
-//        })
-//
-//        alert.addAction(action)
-//        self.present(alert, animated: true, completion: nil)
-//
+
         let model = AlertModel(title: result.title,
                                message: result.text,
                                alertButtonText: result.buttonText) {
@@ -139,6 +127,15 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     private func showNextQestionOrResults() {
         
         if currentQuestionIndex == questionsAmount - 1 {
+            
+            if statisticService.gamesCount >= 0 {
+                statisticService.gamesCount += 1
+            }
+            
+            let record = GameRecord(correct: corrrectAnswers, total: questionsAmount, date: Date().dateTimeString)
+            statisticService.store(correct: corrrectAnswers, total: questionsAmount)
+            statisticService.bestGame = record.compareRecord(current: record, previous: statisticService.bestGame)
+            
             let text = "Ваш результат: \(corrrectAnswers) из \(questionsAmount)\nКоличество сыграных квизов: \(statisticService.gamesCount)\nРекорд:  \(statisticService.bestGame.correct)/\(questionsAmount) \(statisticService.bestGame.date)\nСредняя точность: \(String(format: "%.2f", statisticService.totalAccuracy as CVarArg))%"
            let viewModel = QuizResultsViewModel(title: "Этот раунд окончен!", text: text, buttonText: "Сыграть еще раз")
            show(quiz: viewModel) // show result
