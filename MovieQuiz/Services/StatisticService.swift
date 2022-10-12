@@ -19,7 +19,7 @@ struct GameRecord: Codable {
     let total: Int
     let date: String
     
-    static func returnBestRecords(current: GameRecord, previous: GameRecord) -> Bool {
+    static func isBest(current: GameRecord, previous: GameRecord) -> Bool {
 //        let currentRecord = GameRecord(correct: current.correct, total: current.total, date: current.date)
 //        let previousRecord = GameRecord(correct: previous.correct, total: previous.total, date: previous.date)
 //        if currentRecord.correct > previousRecord.correct {

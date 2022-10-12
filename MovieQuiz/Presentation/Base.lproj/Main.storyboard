@@ -21,16 +21,16 @@
                                 <rect key="frame" x="20" y="54" width="350" height="756"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZHm-hl-7b6">
-                                        <rect key="frame" x="0.0" y="0.0" width="350" height="23.333333333333332"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="350" height="27"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Вопрос:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aUh-jG-kdx" userLabel="Question Title Label">
-                                                <rect key="frame" x="0.0" y="0.0" width="309.66666666666669" height="23.333333333333332"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="309.66666666666669" height="27"/>
                                                 <fontDescription key="fontDescription" name="YSDisplay-Medium" family="YS Display" pointSize="20"/>
                                                 <color key="textColor" name="white"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="252" verticalHuggingPriority="251" text="1/10" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3V0-rR-kMe" userLabel="Index Label">
-                                                <rect key="frame" x="309.66666666666669" y="0.0" width="40.333333333333314" height="23.333333333333332"/>
+                                                <rect key="frame" x="309.66666666666669" y="0.0" width="40.333333333333314" height="27"/>
                                                 <fontDescription key="fontDescription" name="YSDisplay-Medium" family="YS Display" pointSize="20"/>
                                                 <color key="textColor" name="white"/>
                                                 <nil key="highlightedColor"/>
@@ -38,7 +38,7 @@
                                         </subviews>
                                     </stackView>
                                     <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="Defolt" translatesAutoresizingMaskIntoConstraints="NO" id="k91-Fb-Pnw" userLabel="Preview Image">
-                                        <rect key="frame" x="0.0" y="43.333333333333314" width="350" height="525"/>
+                                        <rect key="frame" x="0.0" y="47" width="350" height="525"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="k91-Fb-Pnw" secondAttribute="height" multiplier="2:3" id="QMQ-OQ-0vd"/>
@@ -50,10 +50,10 @@
                                         </userDefinedRuntimeAttributes>
                                     </imageView>
                                     <view contentMode="scaleAspectFill" translatesAutoresizingMaskIntoConstraints="NO" id="xKH-w0-6dy">
-                                        <rect key="frame" x="0.0" y="588.33333333333337" width="350" height="87.666666666666629"/>
+                                        <rect key="frame" x="0.0" y="592" width="350" height="84"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Рейтинг этого фильма меньше, чем 5?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oah-Hu-xev" userLabel="Question Label">
-                                                <rect key="frame" x="42" y="12.999999999999996" width="266" height="61.666666666666657"/>
+                                                <rect key="frame" x="42" y="5" width="266" height="74"/>
                                                 <fontDescription key="fontDescription" name="YSDisplay-Bold" family="YS Display" pointSize="23"/>
                                                 <color key="textColor" name="white"/>
                                                 <nil key="highlightedColor"/>
@@ -63,8 +63,8 @@
                                         <color key="backgroundColor" name="black"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="Oah-Hu-xev" secondAttribute="trailing" constant="42" id="F4m-2q-C2h"/>
-                                            <constraint firstAttribute="bottom" secondItem="Oah-Hu-xev" secondAttribute="bottom" constant="13" id="MFx-Bh-5Xw"/>
-                                            <constraint firstItem="Oah-Hu-xev" firstAttribute="top" secondItem="xKH-w0-6dy" secondAttribute="top" constant="13" id="wNb-9Z-lcE"/>
+                                            <constraint firstAttribute="bottom" secondItem="Oah-Hu-xev" secondAttribute="bottom" constant="5" id="MFx-Bh-5Xw"/>
+                                            <constraint firstItem="Oah-Hu-xev" firstAttribute="top" secondItem="xKH-w0-6dy" secondAttribute="top" constant="5" id="wNb-9Z-lcE"/>
                                             <constraint firstItem="Oah-Hu-xev" firstAttribute="leading" secondItem="xKH-w0-6dy" secondAttribute="leading" constant="42" id="xTj-t4-9no"/>
                                         </constraints>
                                     </view>
