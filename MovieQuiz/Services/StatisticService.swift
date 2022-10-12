@@ -1,5 +1,5 @@
 //
-//  StaticSetvice.swift
+//  StaticService.swift
 //  MovieQuiz
 //
 //  Created by Юрченко Артем on 11.10.2022.
@@ -19,14 +19,15 @@ struct GameRecord: Codable {
     let total: Int
     let date: String
     
-  public func compareRecord(current: GameRecord, previous: GameRecord) -> GameRecord {
-        let currentRecord = GameRecord(correct: current.correct, total: current.total, date: current.date)
-        let previousRecord = GameRecord(correct: previous.correct, total: previous.total, date: previous.date)
-        if currentRecord.correct > previousRecord.correct {
-            return currentRecord
-        } else {
-            return previousRecord
-        }
+    static func isBest(current: GameRecord, previous: GameRecord) -> Bool {
+//        let currentRecord = GameRecord(correct: current.correct, total: current.total, date: current.date)
+//        let previousRecord = GameRecord(correct: previous.correct, total: previous.total, date: previous.date)
+//        if currentRecord.correct > previousRecord.correct {
+//            return currentRecord
+//        } else {
+//            return previousRecord
+//        }
+        return current.correct > previous.correct
     }
 }
 
@@ -39,14 +40,14 @@ final class StatisticServiceImplementation: StatisticService {
     
     var totalAccuracy: Double {
         get {
-          return (Double(bestGame.correct) / Double(bestGame.total)) * 100
+            return (Double(bestGame.correct) / Double(bestGame.total)) * 100
         }
     }
     
     
     var gamesCount: Int {
         get {
-           return userDefaults.integer(forKey: Keys.gamesCount.rawValue)
+            return userDefaults.integer(forKey: Keys.gamesCount.rawValue)
         }
         set {
             userDefaults.set(newValue, forKey: Keys.gamesCount.rawValue)
@@ -83,7 +84,7 @@ final class StatisticServiceImplementation: StatisticService {
         }
     }
     
-
+    
     
     
 }

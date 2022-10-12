@@ -22,5 +22,5 @@ class AlertPresenter: AlertPresenterProtocol {
         delegate?.didShowAlert(controller: alert)
     }
     
-   
+    
 }

@@ -6,11 +6,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     @IBOutlet private var textLabel: UILabel!
     @IBOutlet private var counterLabel: UILabel!
     
-    @IBOutlet var yesButton: UIButton!
-    @IBOutlet var noButton: UIButton!
+    @IBOutlet private var yesButton: UIButton!
+    @IBOutlet private var noButton: UIButton!
     
     private var currentQuestionIndex = 0
-    private var corrrectAnswers = 0
+    private var correctAnswers = 0
     
     private let questionsAmount = 10
     private var questionFactory: QuestionFactoryProtocol?
@@ -27,11 +27,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         alertPresenter = AlertPresenter(delegate: self)
         questionFactory?.requestNextQuestion()
         
-
+        
     }
     // MARK: - QuestionFactoryDelegate
     
-    func didRecieveNextQuestion(question: QuizQuestion?) {
+    func didReceiveNextQuestion(question: QuizQuestion?) {
         guard let question = question else {
             return
         }
@@ -78,12 +78,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     }
     
     private func show(quiz result: QuizResultsViewModel) {
-
+        
         let model = AlertModel(title: result.title,
                                message: result.text,
                                alertButtonText: result.buttonText) {
             self.currentQuestionIndex = 0
-            self.corrrectAnswers = 0
+            self.correctAnswers = 0
             self.questionFactory?.requestNextQuestion()
         }
         alertPresenter?.showAlert(model: model)
@@ -100,16 +100,16 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     
     private func showAnswerResult(isCorrect: Bool) {
         if isCorrect {
-            corrrectAnswers += 1
+            correctAnswers += 1
         }
         
-            imageView.layer.masksToBounds = true
-            imageView.layer.borderWidth = 8
-            imageView.layer.cornerRadius = 20
-            imageView.layer.borderColor = isCorrect ? UIColor.customGreen.cgColor : UIColor.customRed.cgColor
-            self.yesButton.isEnabled = false
-            self.noButton.isEnabled = false
-
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = 8
+        imageView.layer.cornerRadius = 20
+        imageView.layer.borderColor = isCorrect ? UIColor.customGreen.cgColor : UIColor.customRed.cgColor
+        self.yesButton.isEnabled = false
+        self.noButton.isEnabled = false
+        
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self = self else {return}
@@ -117,14 +117,14 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             self.yesButton.isEnabled = true
             self.noButton.isEnabled = true
             self.imageView.layer.borderWidth = 0
-            self.showNextQestionOrResults()
-           
-
+            self.showNextQuestionOrResults()
+            
+            
         }
         
     }
     
-    private func showNextQestionOrResults() {
+    private func showNextQuestionOrResults() {
         
         if currentQuestionIndex == questionsAmount - 1 {
             
@@ -132,21 +132,27 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
                 statisticService.gamesCount += 1
             }
             
-            let record = GameRecord(correct: corrrectAnswers, total: questionsAmount, date: Date().dateTimeString)
-            statisticService.store(correct: corrrectAnswers, total: questionsAmount)
-            statisticService.bestGame = record.compareRecord(current: record, previous: statisticService.bestGame)
+            let record = GameRecord(correct: correctAnswers, total: questionsAmount, date: Date().dateTimeString)
             
-            let text = "Ваш результат: \(corrrectAnswers) из \(questionsAmount)\nКоличество сыграных квизов: \(statisticService.gamesCount)\nРекорд:  \(statisticService.bestGame.correct)/\(questionsAmount) \(statisticService.bestGame.date)\nСредняя точность: \(String(format: "%.2f", statisticService.totalAccuracy as CVarArg))%"
-           let viewModel = QuizResultsViewModel(title: "Этот раунд окончен!", text: text, buttonText: "Сыграть еще раз")
-           show(quiz: viewModel) // show result
+            statisticService.store(correct: correctAnswers, total: questionsAmount)
+            
+            let isBestRecord = GameRecord.isBest(current: record, previous: statisticService.bestGame)
+            
+            if isBestRecord {
+                statisticService.bestGame = record
+            }
+            
+            let text = "Ваш результат: \(correctAnswers) из \(questionsAmount)\nКоличество сыграных квизов: \(statisticService.gamesCount)\nРекорд:  \(statisticService.bestGame.correct)/\(questionsAmount) \(statisticService.bestGame.date)\nСредняя точность: \(String(format: "%.2f", statisticService.totalAccuracy as CVarArg))%"
+            let viewModel = QuizResultsViewModel(title: "Этот раунд окончен!", text: text, buttonText: "Сыграть еще раз")
+            show(quiz: viewModel) // show result
         } else {
             currentQuestionIndex += 1
             questionFactory?.requestNextQuestion()
         }
-
+        
     }
     
-
+    
 }
 
 /*
@@ -157,56 +163,56 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
  Настоящий рейтинг: 9,2
  Вопрос: Рейтинг этого фильма больше чем 6?
  Ответ: ДА
-
-
+ 
+ 
  Картинка: The Dark Knight
  Настоящий рейтинг: 9
  Вопрос: Рейтинг этого фильма больше чем 6?
  Ответ: ДА
-
-
+ 
+ 
  Картинка: Kill Bill
  Настоящий рейтинг: 8,1
  Вопрос: Рейтинг этого фильма больше чем 6?
  Ответ: ДА
-
-
+ 
+ 
  Картинка: The Avengers
  Настоящий рейтинг: 8
  Вопрос: Рейтинг этого фильма больше чем 6?
  Ответ: ДА
-
-
+ 
+ 
  Картинка: Deadpool
  Настоящий рейтинг: 8
  Вопрос: Рейтинг этого фильма больше чем 6?
  Ответ: ДА
-
-
+ 
+ 
  Картинка: The Green Knight
  Настоящий рейтинг: 6,6
  Вопрос: Рейтинг этого фильма больше чем 6?
  Ответ: ДА
-
-
+ 
+ 
  Картинка: Old
  Настоящий рейтинг: 5,8
  Вопрос: Рейтинг этого фильма больше чем 6?
  Ответ: НЕТ
-
-
+ 
+ 
  Картинка: The Ice Age Adventures of Buck Wild
  Настоящий рейтинг: 4,3
  Вопрос: Рейтинг этого фильма больше чем 6?
  Ответ: НЕТ
-
-
+ 
+ 
  Картинка: Tesla
  Настоящий рейтинг: 5,1
  Вопрос: Рейтинг этого фильма больше чем 6?
  Ответ: НЕТ
-
-
+ 
+ 
  Картинка: Vivarium
  Настоящий рейтинг: 5,8
  Вопрос: Рейтинг этого фильма больше чем 6?
