@@ -127,21 +127,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     private func showNextQuestionOrResults() {
         
         if currentQuestionIndex == questionsAmount - 1 {
-            
-            if statisticService.gamesCount >= 0 {
-                statisticService.gamesCount += 1
-            }
-            
-            let record = GameRecord(correct: correctAnswers, total: questionsAmount, date: Date().dateTimeString)
-            
+
             statisticService.store(correct: correctAnswers, total: questionsAmount)
-            
-            let isBestRecord = GameRecord.isBest(current: record, previous: statisticService.bestGame)
-            
-            if isBestRecord {
-                statisticService.bestGame = record
-            }
-            
+        
             let text = "Ваш результат: \(correctAnswers) из \(questionsAmount)\nКоличество сыграных квизов: \(statisticService.gamesCount)\nРекорд:  \(statisticService.bestGame.correct)/\(questionsAmount) \(statisticService.bestGame.date)\nСредняя точность: \(String(format: "%.2f", statisticService.totalAccuracy as CVarArg))%"
             let viewModel = QuizResultsViewModel(title: "Этот раунд окончен!", text: text, buttonText: "Сыграть еще раз")
             show(quiz: viewModel) // show result
@@ -151,7 +139,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         }
         
     }
-    
     
 }
 

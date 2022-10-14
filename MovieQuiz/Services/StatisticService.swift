@@ -20,13 +20,6 @@ struct GameRecord: Codable {
     let date: String
     
     static func isBest(current: GameRecord, previous: GameRecord) -> Bool {
-//        let currentRecord = GameRecord(correct: current.correct, total: current.total, date: current.date)
-//        let previousRecord = GameRecord(correct: previous.correct, total: previous.total, date: previous.date)
-//        if currentRecord.correct > previousRecord.correct {
-//            return currentRecord
-//        } else {
-//            return previousRecord
-//        }
         return current.correct > previous.correct
     }
 }
@@ -40,10 +33,11 @@ final class StatisticServiceImplementation: StatisticService {
     
     var totalAccuracy: Double {
         get {
-            return (Double(bestGame.correct) / Double(bestGame.total)) * 100
+            let correct = userDefaults.integer(forKey: Keys.correct.rawValue)
+            let total = userDefaults.integer(forKey: Keys.total.rawValue)
+            return (Double(correct) / Double(total)) * 100
         }
     }
-    
     
     var gamesCount: Int {
         get {
@@ -74,15 +68,29 @@ final class StatisticServiceImplementation: StatisticService {
     
     func store(correct count: Int, total amount: Int) {
         let gameRecord = GameRecord(correct: count, total: amount, date: Date().dateTimeString)
+        let isBestRecord = GameRecord.isBest(current: gameRecord, previous: bestGame)
         
-        if bestGame.correct >= gameRecord.correct {
-            userDefaults.set(bestGame.correct, forKey: Keys.bestGame.rawValue)
-            userDefaults.set(bestGame.total, forKey: Keys.bestGame.rawValue)
-            userDefaults.set(bestGame.date, forKey: bestGame.date)
+        if isBestRecord {
+            bestGame = gameRecord
         } else  {
             print("Невозможно сохранить результат")
         }
+        
+        let correct = userDefaults.integer(forKey: Keys.correct.rawValue)
+        let total = userDefaults.integer(forKey: Keys.total.rawValue)
+        
+        let newCorrect = correct + count
+        let newTotal = total + amount
+        
+        userDefaults.set(newCorrect, forKey: Keys.correct.rawValue)
+        userDefaults.set(newTotal, forKey: Keys.total.rawValue)
+        
+        if gamesCount >= 0 {
+            gamesCount += 1
+        }
+        
     }
+    
     
     
     
