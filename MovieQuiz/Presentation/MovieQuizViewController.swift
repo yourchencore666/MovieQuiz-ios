@@ -5,9 +5,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var textLabel: UILabel!
     @IBOutlet private var counterLabel: UILabel!
-    
     @IBOutlet private var yesButton: UIButton!
     @IBOutlet private var noButton: UIButton!
+    @IBOutlet private var activityIndicator: UIActivityIndicatorView!
     
     private var currentQuestionIndex = 0
     private var correctAnswers = 0
@@ -140,7 +140,32 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         
     }
     
+    private func showLoadingIndicator() {
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+    }
+    
+    private func hideLoadingIndicator() {
+        activityIndicator.isHidden = true
+        activityIndicator.stopAnimating()
+    }
+    
+    private func showNetworkError(message: String) {
+        hideLoadingIndicator()
+        
+        let model = AlertModel(title: "Network Error",
+                               message: message,
+                               alertButtonText: "Попробовать еще раз") { [weak self] in
+            guard let self = self else {return}
+            self.showNextQuestionOrResults()
+           
+        }
+        alertPresenter?.showAlert(model: model)
+    }
+    
 }
+
+
 
 /*
  Mock-данные
