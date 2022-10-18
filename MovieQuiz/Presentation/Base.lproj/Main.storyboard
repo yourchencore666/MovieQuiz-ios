@@ -37,9 +37,9 @@
                                             </label>
                                         </subviews>
                                     </stackView>
-                                    <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="Defolt" translatesAutoresizingMaskIntoConstraints="NO" id="k91-Fb-Pnw" userLabel="Preview Image">
+                                    <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="k91-Fb-Pnw" userLabel="Preview Image">
                                         <rect key="frame" x="0.0" y="67.333333333333314" width="350" height="525"/>
-                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" name="black"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="k91-Fb-Pnw" secondAttribute="height" multiplier="2:3" id="QMQ-OQ-0vd"/>
                                         </constraints>
@@ -147,7 +147,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Defolt" width="335" height="502"/>
         <namedColor name="black">
             <color red="0.10199999809265137" green="0.10599999874830246" blue="0.13300000131130219" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
