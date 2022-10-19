@@ -28,7 +28,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         questionFactory?.loadData()
         showLoadingIndicator()
         
-        
     }
     // MARK: - QuestionFactoryDelegate
     
@@ -108,7 +107,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)") // высчитываем номер вопроса
     }
     
-    
     private func showAnswerResult(isCorrect: Bool) {
         if isCorrect {
             correctAnswers += 1
@@ -121,7 +119,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         self.yesButton.isEnabled = false
         self.noButton.isEnabled = false
         
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self = self else {return}
             // запускаем задачу через 1 секунду
@@ -130,7 +127,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             self.imageView.layer.borderWidth = 0
             self.showNextQuestionOrResults()
             
-            
         }
         
     }
@@ -138,9 +134,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     private func showNextQuestionOrResults() {
         
         if currentQuestionIndex == questionsAmount - 1 {
-
+            
             statisticService.store(correct: correctAnswers, total: questionsAmount)
-        
+            
             let text = "Ваш результат: \(correctAnswers) из \(questionsAmount)\nКоличество сыграных квизов: \(statisticService.gamesCount)\nРекорд:  \(statisticService.bestGame.correct)/\(questionsAmount) \(statisticService.bestGame.date)\nСредняя точность: \(String(format: "%.2f", statisticService.totalAccuracy as CVarArg))%"
             let viewModel = QuizResultsViewModel(title: "Этот раунд окончен!", text: text, buttonText: "Сыграть еще раз")
             show(quiz: viewModel) // show result
@@ -168,13 +164,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
                                message: message,
                                alertButtonText: "Попробовать еще раз") { [weak self] in
             guard let self = self else {return}
-            self.questionFactory?.loadData()
             self.showLoadingIndicator()
-            self.showNextQuestionOrResults()
-           
+            self.questionFactory?.loadData()
+            
         }
         alertPresenter?.showAlert(model: model)
-        
     }
     
 }
