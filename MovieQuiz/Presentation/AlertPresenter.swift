@@ -19,6 +19,7 @@ class AlertPresenter: AlertPresenterProtocol {
         let alert = UIAlertController(title: model.title, message: model.message, preferredStyle: .alert)
         let action = UIAlertAction(title: model.alertButtonText, style: .default, handler: {  _ in model.completion() })
         alert.addAction(action)
+        alert.view.accessibilityIdentifier = "result_alert" // установил id алерта
         delegate?.didShowAlert(controller: alert)
     }
     
