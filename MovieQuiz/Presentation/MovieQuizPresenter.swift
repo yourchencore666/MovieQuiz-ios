@@ -10,23 +10,56 @@ import UIKit
 final class MovieQuizPresenter {
     
     let questionsAmount: Int = 10
-    private var currentQuestionIndex: Int = 0
+    var currentQuestionIndex: Int = 0
+    var correctAnswers: Int = 10
+    var questionFactory: QuestionFactoryProtocol?
     var currentQuestion: QuizQuestion?
+    var statisticService: StatisticService = StatisticServiceImplementation()
+
     weak var viewController: MovieQuizViewController?
     
-    func yesButtonClicked() {
+    private func didAnswer(isYes: Bool) {
         guard let currentQuestion = currentQuestion else {
             return
         }
-        viewController?.showAnswerResult(isCorrect: currentQuestion.correctAnswer)
+        
+        let givenAnswer = isYes
+        viewController?.showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+    }
+    
+    func showNextQuestionOrResults() {
+        
+        if self.isLastQuestion() {
+            
+            statisticService.store(correct: correctAnswers, total: self.questionsAmount)
+            
+            let text = "Ваш результат: \(correctAnswers) из \(self.questionsAmount)\nКоличество сыграных квизов: \(statisticService.gamesCount)\nРекорд:  \(statisticService.bestGame.correct)/\(self.questionsAmount) \(statisticService.bestGame.date)\nСредняя точность: \(String(format: "%.2f", statisticService.totalAccuracy as CVarArg))%"
+            let viewModel = QuizResultsViewModel(title: "Этот раунд окончен!", text: text, buttonText: "Сыграть еще раз")
+            viewController?.show(quiz: viewModel) // show result
+        } else {
+            self.switchToNextQuestion()
+            questionFactory?.requestNextQuestion()
+        }
+        
+    }
+    
+    func didReceiveNextQuestion(question: QuizQuestion?) {
+        guard let question = question else {
+            return
+        }
+        currentQuestion = question
+        let viewModel = convert(model: question)
+        DispatchQueue.main.async { [weak self] in
+            self?.viewController?.show(quiz: viewModel)
+        }
+    }
+    
+    func yesButtonClicked() {
+       didAnswer(isYes: true)
     }
     
     func noButtonClicked() {
-        guard let currentQuestion = currentQuestion else {
-            return
-        }
-        viewController?.showAnswerResult(isCorrect: !currentQuestion.correctAnswer)
-        
+        didAnswer(isYes: false)
     }
     
     func convert(model: QuizQuestion) -> QuizStepViewModel {
