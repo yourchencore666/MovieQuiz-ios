@@ -54,7 +54,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         }
         
         let givenAnswer = isCorrectAnswer
-        viewController?.showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
     
     func showNextQuestionOrResults() {
@@ -69,6 +69,24 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         } else {
             self.switchToNextQuestion()
             questionFactory?.requestNextQuestion()
+        }
+        
+    }
+    
+    func showAnswerResult(isCorrect: Bool) {
+        if (isCorrect) { correctAnswers += 1 }
+        
+        viewController?.highlightImageBorder(isCorrectAnswer: isCorrect)
+        
+        viewController?.buttonEnableToggle()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            guard let self = self else {return}
+            // запускаем задачу через 1 секунду
+            self.viewController?.buttonEnableToggle()
+            self.viewController?.discardImageBorder()
+            self.showNextQuestionOrResults()
+            
         }
         
     }

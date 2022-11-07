@@ -22,7 +22,7 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
         showLoadingIndicator()
         
     }
- 
+    
     
     // MARK: - AlertPresenterDelegate
     
@@ -65,26 +65,20 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
         
     }
     
-    func showAnswerResult(isCorrect: Bool) {
-        if (isCorrect) { presenter.correctAnswers += 1 }
-        
+    func highlightImageBorder(isCorrectAnswer: Bool) {
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 8
         imageView.layer.cornerRadius = 20
-        imageView.layer.borderColor = isCorrect ? UIColor.customGreen.cgColor : UIColor.customRed.cgColor
-        self.yesButton.isEnabled = false
-        self.noButton.isEnabled = false
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            guard let self = self else {return}
-            // запускаем задачу через 1 секунду
-            self.yesButton.isEnabled = true
-            self.noButton.isEnabled = true
-            self.imageView.layer.borderWidth = 0
-            self.presenter.showNextQuestionOrResults()
-            
-        }
-        
+        imageView.layer.borderColor = isCorrectAnswer ? UIColor.customGreen.cgColor : UIColor.customRed.cgColor
+    }
+    
+    func discardImageBorder() {
+        imageView.layer.borderWidth = 0
+    }
+    
+    func buttonEnableToggle() {
+        yesButton.isEnabled.toggle()
+        noButton.isEnabled.toggle()
     }
     
     func showLoadingIndicator() {
