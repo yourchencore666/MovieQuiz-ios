@@ -1,6 +1,6 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
+final class MovieQuizViewController: UIViewController, AlertPresenterDelegate, MovieQuizViewControllerProtocol {
     
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var textLabel: UILabel!
@@ -38,10 +38,12 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
         presenter.yesButtonClicked()
+        buttonEnableToggle(state: false)
     }
     
     @IBAction private func noButtonClicked(_ sender: UIButton) {
         presenter.noButtonClicked()
+        buttonEnableToggle(state: false)
     }
     
     // MARK: - Private functions
@@ -70,15 +72,16 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate {
         imageView.layer.borderWidth = 8
         imageView.layer.cornerRadius = 20
         imageView.layer.borderColor = isCorrectAnswer ? UIColor.customGreen.cgColor : UIColor.customRed.cgColor
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    self.imageView.layer.borderWidth = 0
+                    self.buttonEnableToggle(state: true)
+                }
     }
     
-    func discardImageBorder() {
-        imageView.layer.borderWidth = 0
-    }
-    
-    func buttonEnableToggle() {
-        yesButton.isEnabled.toggle()
-        noButton.isEnabled.toggle()
+    func buttonEnableToggle(state: Bool) {
+        yesButton.isEnabled = state
+        noButton.isEnabled = state
     }
     
     func showLoadingIndicator() {

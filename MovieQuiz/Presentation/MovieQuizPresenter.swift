@@ -16,9 +16,9 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     var currentQuestion: QuizQuestion?
     var statisticService: StatisticService = StatisticServiceImplementation()
     
-    weak var viewController: MovieQuizViewController?
+    weak var viewController: MovieQuizViewControllerProtocol?
     
-    init(viewController: MovieQuizViewController) {
+    init(viewController: MovieQuizViewControllerProtocol) {
         self.viewController = viewController
         
         questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
@@ -77,14 +77,10 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         if (isCorrect) { correctAnswers += 1 }
         
         viewController?.highlightImageBorder(isCorrectAnswer: isCorrect)
-        
-        viewController?.buttonEnableToggle()
-        
+                
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self = self else {return}
             // запускаем задачу через 1 секунду
-            self.viewController?.buttonEnableToggle()
-            self.viewController?.discardImageBorder()
             self.showNextQuestionOrResults()
             
         }
@@ -123,4 +119,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         correctAnswers = 0
         questionFactory?.requestNextQuestion()
     }
+    
 }
+
+
