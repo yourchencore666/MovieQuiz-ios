@@ -23,17 +23,6 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate, M
         
     }
     
-    
-    // MARK: - AlertPresenterDelegate
-    
-    func didShowAlert(controller: UIAlertController?) {
-        guard let controller = controller else {
-            return
-        }
-        present(controller, animated: true, completion: nil)
-        
-    }
-    
     // MARK: - Actions
     
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
@@ -47,6 +36,16 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate, M
     }
     
     // MARK: - Private functions
+    
+    // MARK: - AlertPresenterDelegate
+    
+    func didShowAlert(controller: UIAlertController?) {
+        guard let controller = controller else {
+            return
+        }
+        present(controller, animated: true, completion: nil)
+        
+    }
     
     func show(quiz step: QuizStepViewModel) {
         imageView.image = step.image
@@ -74,9 +73,9 @@ final class MovieQuizViewController: UIViewController, AlertPresenterDelegate, M
         imageView.layer.borderColor = isCorrectAnswer ? UIColor.customGreen.cgColor : UIColor.customRed.cgColor
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    self.imageView.layer.borderWidth = 0
-                    self.buttonEnableToggle(state: true)
-                }
+            self.imageView.layer.borderWidth = 0
+            self.buttonEnableToggle(state: true)
+        }
     }
     
     func buttonEnableToggle(state: Bool) {

@@ -9,14 +9,13 @@ import UIKit
 
 final class MovieQuizPresenter: QuestionFactoryDelegate {
     
-    let questionsAmount: Int = 10
-    var currentQuestionIndex: Int = 0
-    var correctAnswers: Int = 0
-    var questionFactory: QuestionFactoryProtocol?
-    var currentQuestion: QuizQuestion?
-    var statisticService: StatisticService = StatisticServiceImplementation()
-    
-    weak var viewController: MovieQuizViewControllerProtocol?
+    private let questionsAmount: Int = 10
+    private var currentQuestionIndex: Int = 0
+    private var correctAnswers: Int = 0
+    private var questionFactory: QuestionFactoryProtocol?
+    private var currentQuestion: QuizQuestion?
+    private var statisticService: StatisticService = StatisticServiceImplementation()
+    private weak var viewController: MovieQuizViewControllerProtocol?
     
     init(viewController: MovieQuizViewControllerProtocol) {
         self.viewController = viewController
@@ -25,6 +24,47 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         questionFactory?.loadData()
         viewController.showLoadingIndicator()
     }
+    
+    // MARK: - Private functions
+    private func didAnswer(isCorrectAnswer: Bool) {
+        guard let currentQuestion = currentQuestion else {
+            return
+        }
+        
+        let givenAnswer = isCorrectAnswer
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+    }
+    
+    private func showNextQuestionOrResults() {
+        
+        if self.isLastQuestion() {
+            
+            statisticService.store(correct: correctAnswers, total: self.questionsAmount)
+            
+            let text = "Ваш результат: \(correctAnswers) из \(self.questionsAmount)\nКоличество сыграных квизов: \(statisticService.gamesCount)\nРекорд:  \(statisticService.bestGame.correct)/\(self.questionsAmount) \(statisticService.bestGame.date)\nСредняя точность: \(String(format: "%.2f", statisticService.totalAccuracy as CVarArg))%"
+            let viewModel = QuizResultsViewModel(title: "Этот раунд окончен!", text: text, buttonText: "Сыграть еще раз")
+            viewController?.show(quiz: viewModel) // show result
+        } else {
+            self.switchToNextQuestion()
+            questionFactory?.requestNextQuestion()
+        }
+        
+    }
+    
+    private func showAnswerResult(isCorrect: Bool) {
+        if (isCorrect) { correctAnswers += 1 }
+        
+        viewController?.highlightImageBorder(isCorrectAnswer: isCorrect)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            guard let self = self else {return}
+            // запускаем задачу через 1 секунду
+            self.showNextQuestionOrResults()
+            
+        }
+        
+    }
+    
     // MARK: - QuestionFactoryDelegate
     
     func didReceiveNextQuestion(question: QuizQuestion?) {
@@ -46,45 +86,6 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
     
     func didFailToLoadData(with error: Error) {
         viewController?.showNetworkError(message: error.localizedDescription)
-    }
-    
-    func didAnswer(isCorrectAnswer: Bool) {
-        guard let currentQuestion = currentQuestion else {
-            return
-        }
-        
-        let givenAnswer = isCorrectAnswer
-        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-    }
-    
-    func showNextQuestionOrResults() {
-        
-        if self.isLastQuestion() {
-            
-            statisticService.store(correct: correctAnswers, total: self.questionsAmount)
-            
-            let text = "Ваш результат: \(correctAnswers) из \(self.questionsAmount)\nКоличество сыграных квизов: \(statisticService.gamesCount)\nРекорд:  \(statisticService.bestGame.correct)/\(self.questionsAmount) \(statisticService.bestGame.date)\nСредняя точность: \(String(format: "%.2f", statisticService.totalAccuracy as CVarArg))%"
-            let viewModel = QuizResultsViewModel(title: "Этот раунд окончен!", text: text, buttonText: "Сыграть еще раз")
-            viewController?.show(quiz: viewModel) // show result
-        } else {
-            self.switchToNextQuestion()
-            questionFactory?.requestNextQuestion()
-        }
-        
-    }
-    
-    func showAnswerResult(isCorrect: Bool) {
-        if (isCorrect) { correctAnswers += 1 }
-        
-        viewController?.highlightImageBorder(isCorrectAnswer: isCorrect)
-                
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            guard let self = self else {return}
-            // запускаем задачу через 1 секунду
-            self.showNextQuestionOrResults()
-            
-        }
-        
     }
     
     func yesButtonClicked() {
